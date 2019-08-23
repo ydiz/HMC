@@ -28,3 +28,10 @@ GFFA.ini
 HMC.ini
 Makefile
 makefile
+
+*.cobaltlog
+*.error
+*.output
+*.log
+
+*.sh
