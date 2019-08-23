@@ -7,9 +7,9 @@
 # ignore all dirs
 */
 */*
+
 !WilsonFlow/
-!WilsonFlow/*.cc
-!WilsonFlow/*.h
+!WilsonFlow/*
 
 
 ckpoint*
