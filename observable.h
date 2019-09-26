@@ -47,8 +47,10 @@ public:
 
 class MyTC_para {
 public:
+  std::string type;
   double step_size;
   double adaptiveErrorTolerance;
+  double maxTau;
 
   int TrajectoryStart;
   int TrajectoryInterval;
@@ -60,10 +62,12 @@ public:
 
 std::ostream& operator<<(std::ostream &out, const MyTC_para &p) {
   out << "Topological Charge: "<< std::endl;
+  out << "type: " << p.type << std::endl;
   out << "TrajectoryStart: " << p.TrajectoryStart << std::endl;
   out << "TrajectoryInterval: " << p.TrajectoryInterval << std::endl;
   out << "step_size: " << p.step_size << std::endl;
   out << "adaptiveErrorTolerance: " << p.adaptiveErrorTolerance << std::endl;
+  out << "maxTau: " << p.maxTau << std::endl;
   out << "topoChargeOutFile: " << p.topoChargeOutFile << std::endl;
   out << "saveSmearField: " << p.saveSmearField << std::endl;
   out << "smearFieldFilePrefix: " << p.smearFieldFilePrefix << std::endl;
@@ -85,13 +89,16 @@ public:
                           GridSerialRNG &sRNG,
                           GridParallelRNG &pRNG) {
 
-    MyWilsonFlow<PeriodicGimplR> WF(Par.step_size, Par.adaptiveErrorTolerance);
+    MyWilsonFlow<PeriodicGimplR> WF(Par.step_size, Par.adaptiveErrorTolerance, Par.maxTau);
 
     if(traj > Par.TrajectoryStart && traj % Par.TrajectoryInterval == 0)
     {
       LatticeGaugeField Uflow(U._grid);
-      WF.smear_adaptive(Uflow, U);
-      // WF.smear(Uflow, U);
+
+      if(Par.type=="fixedMaxTau") WF.smear_adaptive_fixed_tau(Uflow, U);
+      else if(Par.type=="tSquaredE0.3") WF.smear_adaptive(Uflow, U);
+      else assert(0);
+
       if(Par.saveSmearField) writeField(Uflow, Par.smearFieldFilePrefix + "." + std::to_string(traj));
 
       std::vector<double> topoCharge = timeSliceTopologicalCharge(Uflow);

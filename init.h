@@ -59,6 +59,7 @@ void init(int argc, char **argv, HMC_PARA &hmc_para)
 
                     ("TC.step_size", po::value<double>(&hmc_para.tc_para.step_size)->default_value(1.0), "")
                     ("TC.adaptiveErrorTolerance", po::value<double>(&hmc_para.tc_para.adaptiveErrorTolerance)->default_value(2e-6), "")
+                    ("TC.maxTau", po::value<double>(&hmc_para.tc_para.maxTau)->default_value(3.0), "")
                     ("TC.TrajectoryStart", po::value<int>(&hmc_para.tc_para.TrajectoryStart)->default_value(20))
                     ("TC.TrajectoryInterval", po::value<int>(&hmc_para.tc_para.TrajectoryInterval)->default_value(1))
                     ("TC.topoChargeOutFile", po::value<std::string>(&hmc_para.tc_para.topoChargeOutFile)->default_value("topoCharge.txt"))

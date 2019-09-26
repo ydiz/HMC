@@ -34,8 +34,20 @@ void run_hmc(const HMC_PARA &hmc_para) {
   TheHMC.Resources.AddObservable<PlaqObs>();
   typedef LinkTraceMod<HMCWrapper::ImplPolicy> LTObs;
   TheHMC.Resources.AddObservable<LTObs>();
-  typedef MyTCMod<HMCWrapper::ImplPolicy> QObs;
-  TheHMC.Resources.AddObservable<QObs>(hmc_para.tc_para);
+
+  // typedef MyTCMod<HMCWrapper::ImplPolicy> QObs;  // My TC // run Wilson flow to t^2*E = 0.3 instead of a fixed t
+  // TheHMC.Resources.AddObservable<QObs>(hmc_para.tc_para);
+
+  // typedef TopologicalChargeMod<HMCWrapper::ImplPolicy> QObs;
+  // TopologyObsParameters TopParams;
+  // TopParams.interval = 5;
+  // TopParams.do_smearing = true;
+  // // TopParams.Smearing.steps = 200;
+  // TopParams.Smearing.step_size = 0.01;
+  // TopParams.Smearing.meas_interval = 50;
+  // TopParams.Smearing.maxTau = 3.0; 
+  // TheHMC.Resources.AddObservable<QObs>(TopParams);
+
   /////////////////////////////////////////////////////////////
 
   WilsonGaugeActionR Wilson_action(hmc_para.beta);
