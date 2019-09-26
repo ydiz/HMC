@@ -29,24 +29,12 @@ void run_hmc(const HMC_PARA &hmc_para) {
   TheHMC.Resources.SetRNGSeeds(RNGpar);
 
   // Construct observables
-  // here there is too much indirection 
   typedef PlaquetteMod<HMCWrapper::ImplPolicy> PlaqObs;
   TheHMC.Resources.AddObservable<PlaqObs>();
   typedef LinkTraceMod<HMCWrapper::ImplPolicy> LTObs;
   TheHMC.Resources.AddObservable<LTObs>();
-
-  // typedef MyTCMod<HMCWrapper::ImplPolicy> QObs;  // My TC // run Wilson flow to t^2*E = 0.3 instead of a fixed t
-  // TheHMC.Resources.AddObservable<QObs>(hmc_para.tc_para);
-
-  // typedef TopologicalChargeMod<HMCWrapper::ImplPolicy> QObs;
-  // TopologyObsParameters TopParams;
-  // TopParams.interval = 5;
-  // TopParams.do_smearing = true;
-  // // TopParams.Smearing.steps = 200;
-  // TopParams.Smearing.step_size = 0.01;
-  // TopParams.Smearing.meas_interval = 50;
-  // TopParams.Smearing.maxTau = 3.0; 
-  // TheHMC.Resources.AddObservable<QObs>(TopParams);
+  typedef MyTCMod<HMCWrapper::ImplPolicy> QObs; 
+  TheHMC.Resources.AddObservable<QObs>(hmc_para.tc_para);
 
   /////////////////////////////////////////////////////////////
 
@@ -65,19 +53,6 @@ void run_hmc(const HMC_PARA &hmc_para) {
     return;
   }
   TheHMC.TheAction.push_back(Level1);
-
-
-
-  // // TheHMC.Parameters.MD.MDsteps = 48;
-  // // TheHMC.Parameters.MD.trajL   = 1.0;
-  // // TheHMC.Parameters.StartingType = "ColdStart";
-  // // TheHMC.Parameters.Trajectories = 2000;
-  // // TheHMC.Parameters.NoMetropolisUntil = 20;
-  // TheHMC.Parameters.MD.MDsteps = 48;
-  // TheHMC.Parameters.MD.trajL   = 1.0;
-  // TheHMC.Parameters.StartingType = "ColdStart";
-  // TheHMC.Parameters.Trajectories = 2000;
-  // TheHMC.Parameters.NoMetropolisUntil = 20;
 
   // HMC
   TheHMC.Parameters.NoMetropolisUntil = hmc_para.Thermalizations;

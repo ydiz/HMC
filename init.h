@@ -57,6 +57,7 @@ void init(int argc, char **argv, HMC_PARA &hmc_para)
                     ("action", po::value<std::string>(&hmc_para.action)->default_value("Wilson"), "Action name; available choices: Wilson, GF_Wilson, DBW2, GF_DBW2")
                     ("beta", po::value<double>(&hmc_para.beta)->default_value(5.6), "beta")
 
+                    ("TC.type", po::value<std::string>(&hmc_para.tc_para.type)->default_value("fixedMaxTau"), "")
                     ("TC.step_size", po::value<double>(&hmc_para.tc_para.step_size)->default_value(1.0), "")
                     ("TC.adaptiveErrorTolerance", po::value<double>(&hmc_para.tc_para.adaptiveErrorTolerance)->default_value(2e-6), "")
                     ("TC.maxTau", po::value<double>(&hmc_para.tc_para.maxTau)->default_value(3.0), "")

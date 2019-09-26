@@ -187,8 +187,6 @@ void MyWilsonFlow<Gimpl>::evolve_step_adaptive(typename Gimpl::GaugeField &U, do
 template <class Gimpl>
 void MyWilsonFlow<Gimpl>::evolve_step_adaptive_fixed_tau(typename Gimpl::GaugeField &U) {
 
-    static int step = 0;
-    step++;
     LatticeGaugeField U0 = U;
     // calculate Uflow (third order method) and Uflow^prime (second order method)
     GaugeField Z(U._grid);
@@ -213,51 +211,13 @@ void MyWilsonFlow<Gimpl>::evolve_step_adaptive_fixed_tau(typename Gimpl::GaugeFi
 
 
     taus += epsilon;
-    // double new_tSqauredE = energyDensityPlaquette(U); // t^2 * <E>
     double energy_density = energyDensity(U);
     double new_tSqauredE = taus * taus * energy_density;
 
-
-    // if(step > 200) {
-    //   std::cout << "Failed to converge!!!!!!" << std::endl;
-    //
-    //   std::cout << GridLogMessage << "[WilsonFlow] step: "
-    //     << step << "; tau: " << taus << "; E: "
-    //     << energy_density << "; t^2 E: " << new_tSqauredE << std::endl;
-    //
-    //   hasCompleted = true;
-    //   return; // if hasCompleted, only update U
-    // }
-
-    // if(hasCompleted) {
-      std::cout << GridLogMessage << "[WilsonFlow] step: "
-        << step << "; tau: " << taus << "; E: "
+      std::cout << "tau: " << taus << "; E: "
         << energy_density << "; t^2 E: " << new_tSqauredE << std::endl;
-    //   return; // if hasCompleted, only update U
-    // }
-    // if(taus > maxTau) { // if taus > maxTau, go back and use linear interpolation
-    //   U = U0;
-    //   taus = taus - epsilon;
-    //   // epsilon = epsilon * (0.3 - tSqauredE) / (new_tSqauredE - tSqauredE);
-    //   epsilon = epsilon * (0.3 - tSqauredE) / (new_tSqauredE - tSqauredE);
-    //   taus = taus + epsilon;
-    //   hasCompleted = true;
-    //   evolve_step_adaptive(U, tSqauredE);
-    //   step = 0; // reset step to 0 for the next smear_adaptive();
-    //   return;
-    // }
-    // if(new_tSqauredE > 0.3) { // if tSqauredE > 0.3, go back and use linear interpolation
-    //   U = U0;
-    //   taus = taus - epsilon;
-    //   epsilon = epsilon * (0.3 - tSqauredE) / (new_tSqauredE - tSqauredE);
-    //   taus = taus + epsilon;
-    //   hasCompleted = true;
-    //   evolve_step_adaptive(U, tSqauredE);
-    //   step = 0; // reset step to 0 for the next smear_adaptive();
-    //   return;
-    // }
 
-    tSqauredE = new_tSqauredE;
+
     // calculate new step size
     Gimpl::update_field(Zprime, Uprime, -2.0*epsilon); // V'(t+e) = exp(ep*Z')*W0
     GaugeField diffU = U - Uprime;
@@ -272,19 +232,8 @@ void MyWilsonFlow<Gimpl>::evolve_step_adaptive_fixed_tau(typename Gimpl::GaugeFi
 
     double new_epsilon;
     new_epsilon = epsilon * 0.95 * std::pow(adaptiveErrorTolerance/diff,1./3.);
-    // if(diff < adaptiveErrorTolerance) taus += new_epsilon; // taus is flow time before next step
-    // else {
-    //   taus -= epsilon;
-    //   U = U0;
-    //   taus += new_epsilon;
-    // }
 
-    // adjust integration step
-    // epsilon = epsilon * 0.95 * std::pow(adaptiveErrorTolerance/diff,1./3.);
     epsilon = new_epsilon;
-
-    // if(taus + epsilon >= maxTau) {
-    //   epsilon
 }
 
 
@@ -319,20 +268,22 @@ void MyWilsonFlow<Gimpl>::smear_adaptive_fixed_tau(GaugeField& out, const GaugeF
   std::cout << GridLogDebug << "[WilsonFlow] step: "  << 0
     << "; tau: " << 0 << "; E: " << energyDensity(in) << std::endl;
 
-  // taus = epsilon; // initial taus is flow time after first step
   taus = 0;
-  // hasCompleted = false;
-  double tSqauredE = 0.;
 
+  int step = 0;
   do{
+    std::cout << GridLogMessage << "[WilsonFlow] step: " << step << "; ";
+    step++;
+
     evolve_step_adaptive_fixed_tau(out);
-    // if(hasCompleted) break;
     if(taus + epsilon > maxTau) {
+      std::cout << GridLogMessage << "[WilsonFlow] step: " << step << "; ";
       epsilon = maxTau - taus;
       evolve_step_adaptive_fixed_tau(out);
       break;
     }
   } while(true);
+
 }
 
 
