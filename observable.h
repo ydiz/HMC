@@ -102,7 +102,7 @@ public:
       if(Par.saveSmearField) writeField(Uflow, Par.smearFieldFilePrefix + "." + std::to_string(traj));
 
       std::vector<double> topoCharge = timeSliceTopologicalCharge(Uflow);
-      writeVector(topoCharge, Par.topoChargeOutFile, U._grid->ThisRank());
+      writeVector(topoCharge, traj, Par.topoChargeOutFile, U._grid->ThisRank());
 
       int def_prec = std::cout.precision();
       std::cout << GridLogMessage << std::setprecision(std::numeric_limits<Real>::digits10 + 1)

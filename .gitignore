@@ -1,40 +1,5 @@
-# Ignore all
 *
 
-# Unignore all with extensions; ignore executables
-!*.*
-
-# ignore all dirs
-*/
-*/*
-
-!WilsonFlow/
-!WilsonFlow/*
-
-
-ckpoint*
-*.txt
-*.o
-
-Test*.cc
-!Test_hmc.cc
-
-.nfs*
-
-run.sh
-submit.sh
-nohup.out
-GFFA.ini
-HMC.ini
-Makefile
-makefile
-
-*.cobaltlog
-*.error
-*.output
-*.log
-
-*.sh
-
-
-*.swp
+!**/*.cc
+!**/*.h
+!.gitignore
